@@ -1,0 +1,11 @@
+log/*
+temp/*
+vendor/*
+!.gitignore
+!.htaccess
+!web.config
+app/config/config.local.neon
+.vscode/*
+app/import.script/import.log
+app/import.script/import.conf.php
+app/import.script/attachment/*

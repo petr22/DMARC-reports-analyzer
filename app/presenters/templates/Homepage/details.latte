@@ -1,0 +1,141 @@
+{block content}
+    <div class="col-md-12 undernavbar">
+        {form filterGlobalForm, class => "ajax"}
+            <div class="container well well-sm margintop">
+                <div class="row">
+                    <div class="col-md-3 textcenter">
+                        Header From<br>
+                        {input domainFrom, class => "form-control"}
+                    </div>
+                    <div class="col-md-3 col-md-offset-1 textcenter">
+                        Date From<br>
+                        {input dateFrom, class => "form-control"}
+                    </div>
+                    <div class="col-md-3 col-md-offset-1 textcenter">
+                        Date To<br>
+                        {input dateTo, class => "form-control"}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 textcenter">
+                        SPF Aligned<br>
+                        {input spfAlign, class => "form-control"}
+                    </div>
+                    <div class="col-md-3 col-md-offset-1 textcenter">
+                        DKIM Aligned<br>
+                        {input dkimAlign, class => "form-control"}
+                    </div>
+                    <div class="col-md-3 col-md-offset-1 textcenter">
+                        Disposition<br>
+                        {input disposition, class => "form-control"}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 margintop">
+                        <button id="resetButton" class="btn btn-default" type="button">Clear filter</button>
+                    </div>
+                    <div class="col-md-3 col-md-offset-2 textcenter margintop">
+                        {input submit}
+                    </div>
+               </div>
+            </div>
+        {/form}
+        {snippet detailsData}
+            <ul class="pagination col-md-6" style="margin-top:0px">
+                <li><a>page: {$paginator->page} / {$paginator->pageCount}</a></li>
+                    {if ($paginator->pageCount > 1)}
+                    <li><a class="ajax btn{if !($paginator->page > 1)} disabled{/if}" n:href="setPage! 'details',1">first</a></li>
+                    <li><a class="ajax btn{if !($paginator->page > 1)} disabled{/if}" n:href="setPage! 'details',$paginator->page-1">previous</a></li>
+                    <li><a class="ajax btn{if !($paginator->page < $paginator->pageCount)} disabled{/if}" n:href="setPage! 'details',$paginator->page+1">next</a></li>
+                    <li><a class="ajax btn{if !($paginator->page < $paginator->pageCount)} disabled{/if}" n:href="setPage! 'details',$paginator->pageCount">last</a></li>
+                {/if}
+            </ul>
+            <form class="form-inline col-md-6">
+                <div class="form-group pull-right">
+                    Items per page:
+                    <select id="itemsPerPage" class="form-control">
+                        <option value="25"{if ($itemsPerPage == 25)} selected="selected"{/if}>25</option>
+                        <option value="50"{if ($itemsPerPage == 50)} selected="selected"{/if}>50</option>
+                        <option value="100"{if ($itemsPerPage == 100)} selected="selected"{/if}>100</option>
+                        <option value="250"{if ($itemsPerPage == 250)} selected="selected"{/if}>250</option>
+                        <option value="1000"{if ($itemsPerPage == 1000)} selected="selected"{/if}>1000</option>
+                        <option value="10000"{if ($itemsPerPage == 10000)} selected="selected"{/if}>10000</option>
+                    </select>
+                </div>
+            </form>
+            <table id="detailsTable" class="table table-stripped table-bordered table-hover">
+                <thead>
+                    <tr class="pointer whitesmokebackground vertical-middle textcenter">
+                        <th>Header From</th>
+                        <th>IP address</th>
+                        <th>Count</th>
+                        <th>DMARC</th>
+                        <th>SPF domain</th>
+                        <th>SPF</th>
+                        <th>SPF align</th>
+                        <th>DKIM domain</th>
+                        <th>DKIM</th>
+                        <th>DKIM align</th>
+                        <th>Disposition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {ifset $data}
+                        <tr n:foreach="$data as $row" class="pointer small {*{ifset $from}{if ($from != $row['identifier_hfrom'])}{var $from = $row['identifier_hfrom']}blacktop{/if}{else}{var $from = $row['identifier_hfrom']}{/ifset}*} {if ($row['spf_align']=='pass' && $row['dkim_align']=='pass')}success{elseif ($row['spf_align']=='fail' && $row['dkim_align']=='pass')}warning{elseif ($row['spf_align']=='pass' && $row['dkim_align']=='fail')}warning{elseif ($row['spf_align']=='fail' && $row['dkim_align']=='fail')}danger{/if}" onClick="openReports({$row['identifier_hfrom']},{$row['spf_align']},{$row['dkim_align']},{ifset ($row['ip'])}{long2ip($row['ip'])}{/ifset}{ifset $row['ip6']}{inet_ntop($row['ip6'])}{/ifset})">
+                            <td>{$row['identifier_hfrom']}</td>
+                            <td>{ifset ($row['ip'])}{long2ip($row['ip'])}{/ifset}{ifset $row['ip6']}{inet_ntop($row['ip6'])}{/ifset}</td>
+                            <td>{$row['count']}</td>
+                            <td>{if ($row['spf_align']=='pass' && $row['dkim_align']=='pass')}pass{elseif ($row['spf_align']=='fail' && $row['dkim_align']=='pass')}pass (only DKIM){elseif ($row['spf_align']=='pass' && $row['dkim_align']=='fail')}pass (only SPF){elseif ($row['spf_align']=='fail' && $row['dkim_align']=='fail')}fail{/if}</td>
+                            <td>{$row['spfdomain']}</td>
+                            <td>{$row['spfresult']}</td>
+                            <td>{$row['spf_align']}</td>
+                            <td>{$row['dkimdomain']}</td>
+                            <td>{$row['dkimresult']}</td>
+                            <td>{$row['dkim_align']}</td>
+                            <td>{$row['disposition']}</td>
+                        </tr>
+                    {else}
+                        <tr>
+                            <td colspan="11">No data</td>
+                        </tr>
+                    {/ifset}
+                </tbody>
+            </table>
+            <script>
+                function openReports(domainFrom,spfAlign,dkimAlign,ipAddress) {
+                    $.nette.ajax({
+                        type: 'POST',
+                        url: {link openReports!},
+                        data: {'domainFrom':domainFrom,'spfAlign':spfAlign,'dkimAlign':dkimAlign{ifset $dateFrom},'dateFrom':{$dateFrom}{/ifset}{ifset $dateTo},'dateTo':{$dateTo}{/ifset},'ipAddress':ipAddress}
+                    });
+                }
+                $('#detailsTable').tablesorter({ 
+                    headers: {
+                        1: {
+                            sorter: 'text'
+                        }
+                    }
+                });
+                $('#detailsTable').floatThead({
+	                position: 'fixed',
+                    top: 50
+                });
+                $('#itemsPerPage').change(function(){
+                    $.nette.ajax({
+                        type: 'POST',
+                        url: {link setItemsPerPage!},
+                        data: {'pageName':'details','itemsPerPage':$(this).val()}
+                    });
+                });
+                //$('#detailsTable td:nth-child(2),#detailsTable th:nth-child(2)').hide();
+            </script>
+        {/snippet}
+    </div>
+    <script>
+        $('#frm-filterGlobalForm-dateFrom,#frm-filterGlobalForm-dateTo').datepicker();
+        $('#resetButton').click(function(){
+            $('#frm-filterGlobalForm').find('input:text, input:password, input:file, select, textarea').val('');
+            $('#frm-filterGlobalForm').find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+        });
+    </script>
+{/block}

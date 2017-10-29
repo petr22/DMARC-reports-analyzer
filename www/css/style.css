@@ -1,0 +1,59 @@
+tr.blacktop th, tr.blacktop td, th.blacktop, td.blacktop {
+    border-top: 2px solid black !important;	
+}
+
+tr.blackbottom th, tr.blackbottom td, th.blackbottom, td.blackbottom  {
+    border-bottom: 2px solid black !important;	
+}
+
+td.blackleft, th.blackleft {
+    border-left: 2px solid black !important;	
+}
+
+td.blackright, th.blackright {
+    border-right: 2px solid black !important;	
+}
+
+.textcenter {
+    text-align: center;
+}
+
+.margintop {
+    margin-top: 10px;
+}
+
+.margintop2 {
+    margin-top: 25px;
+}
+
+.marginbot {
+    margin-bottom: 10px;
+}
+
+.undernavbar {
+    margin-top: 50px;
+}
+
+.undernavbar2 {
+    margin-top: 60px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.whitesmokebackground {
+    background-color: whitesmoke;
+}
+
+.ui-datepicker{ 
+    z-index: 9999 !important;
+}
+
+tr.vertical-middle th,tr.vertical-middle td {
+    vertical-align: middle !important;
+}
+
+tr.textcenter th,tr.textcenter td {
+    text-align: center !important;
+}

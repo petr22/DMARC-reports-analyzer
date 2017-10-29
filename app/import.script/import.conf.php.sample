@@ -1,0 +1,20 @@
+<?php
+
+// connect to IMAP email with your credentials 
+
+//$host = 'localhost:993/imap/ssl/novalidate-cert';
+//$host = 'localhost:993/imap/ssl';
+//$host = 'localhost:143/imap';
+$host = 'localhost:143/imap/tls';
+$username = 'dmarc'; 
+$password = 'password';
+$folderInbox = 'INBOX';
+$folderProcessed = 'Processed';
+
+// connect to database with your credentials 
+$dbname = 'dmarc';
+$dbuser = 'dmarc';
+$dbpass = 'password';
+$dbhost = 'localhost';
+
+?>

@@ -1,0 +1,9 @@
+database:
+    dsn: 'mysql:host=127.0.0.1;dbname=dmarc'
+    user: 'dmarc'
+    password: 'password'
+
+services:
+    authenticator: Nette\Security\SimpleAuthenticator([
+            admin: admin
+        ])

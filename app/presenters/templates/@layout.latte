@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+
+	<title>{ifset title}{include title|stripHtml} | {/ifset}DMARC reports</title>
+
+	<link rel="stylesheet" href="{$basePath}/css/jquery-ui.min.css">
+	<link rel="stylesheet" href="{$basePath}/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{$basePath}/css/style.css">
+	<link rel="stylesheet" href="{$basePath}/css/jquery.json-view.min.css">
+
+	<script src="{$basePath}/js/jquery-3.2.1.min.js"></script>
+	<script src="{$basePath}/js/bootstrap.min.js"></script>
+	<script src="{$basePath}/js/nette.ajax.js"></script>
+	<script src="{$basePath}/js/jquery-ui.min.js"></script>
+	<script src="{$basePath}/js/netteForms.min.js"></script>
+	<script src="{$basePath}/js/jquery.tablesorter.js"></script>
+	<script src="{$basePath}/js/jquery.floatThead.min.js"></script>
+	<script src="{$basePath}/js/jquery.json-view.min.js"></script>
+</head>
+
+<body>
+    <script>
+        $(function () {
+            $.nette.init();
+        });
+        $.datepicker.setDefaults({
+            dateFormat: "dd.mm.yy"
+        });
+    </script>
+
+	{snippet flashes}
+	    <div n:foreach="$flashes as $flash" n:class="undernavbar, flash, $flash->type">{$flash->message}</div>
+    {/snippet}
+
+    {include 'Homepage/menu.latte'}
+	{include content}
+
+	{block scripts}
+	{/block}
+</body>
+</html>
