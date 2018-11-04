@@ -183,7 +183,7 @@ if($emails) {
                     $zip->open('./' . $folder . '/' . $email_number . '-' . $filename);
                     $xmlFilename = $zip->getNameIndex(0);
                     $zip->close();
-                    $xmlRaw = file_get_contents('zip://./' . $folder . '/' . $email_number . '-' . $filename . '#' . $xmlFilename);
+                    $xmlRaw = file_get_contents('zip://' . realpath('./' . $folder . '/' . $email_number . '-' . $filename) . '#' . $xmlFilename);
                     $xml = simplexml_load_string($xmlRaw);
                     unlink('./' . $folder . '/' . $email_number . '-' . $filename);
                 } elseif(preg_match('/.gz$/i',$filename)) {
