@@ -383,8 +383,14 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
             $result = $this->database->query($query,$serial)->fetchAll();
         }
         if (isset($result) && count($result) != 0) {
-            $this->template->xmlData = gzdecode(base64_decode($result[0]['raw_xml']));
-            $this->template->jsonData = json_encode(simplexml_load_string(gzdecode(base64_decode($result[0]['raw_xml']))));
+            // attempt base64/gzip decode
+            $raw_xml = gzdecode(base64_decode($result[0]['raw_xml']));
+            if (!$raw_xml) {
+                // fall back to raw xml without decoding
+                $raw_xml = $result[0]['raw_xml'];
+            }
+            $this->template->xmlData = $raw_xml;
+            $this->template->jsonData = json_encode(simplexml_load_string($raw_xml));
         } else {
             $this->template->xmlData = NULL;
             $this->template->jsonData = NULL;
